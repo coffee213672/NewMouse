@@ -1,0 +1,7 @@
+{
+  "ver": "1.0.0",
+  "uuid": "a25f42a3-100f-4273-bc4c-eb5d03d2347f",
+  "atlasJson": "{\"width\":256,\"SubTexture\":[{\"width\":169,\"y\":1,\"height\":92,\"name\":\"mouse-06\",\"x\":1},{\"width\":32,\"y\":19,\"height\":14,\"name\":\"mouse-02\",\"x\":172},{\"width\":81,\"y\":1,\"height\":16,\"name\":\"mouse-07\",\"x\":172},{\"width\":107,\"y\":95,\"height\":59,\"name\":\"mouse-08\",\"x\":1},{\"width\":4,\"y\":19,\"height\":4,\"name\":\"mouse-10\",\"x\":206}],\"height\":256,\"name\":\"bones\",\"imagePath\":\"bones_tex.png\"}",
+  "texture": "764e37f3-e0ff-44cb-b01e-9c3d1224a5ed",
+  "subMetas": {}
+}
