@@ -5,6 +5,8 @@ cc.Class({
     properties: {
         MoneyLeft: cc.Node,
         MoneyRight: cc.Node,
+        ResultPeriod: cc.Label,
+        ResuleDBA: cc.Node,
     },
 
     setMouseValue:function(act,tn,direction){
@@ -98,7 +100,7 @@ cc.Class({
                     // var superInfo = cc.find('superInfo');
                     // if(superInfo.audioIO == 0) cc.audioEngine.playMusic(this.getmusic, false, 0.5);
                     this.MoneyLeft.active = false;
-                    this.showresult(MouseR)
+                    this.ShowResult(MouseR)
                 },this));
                 MouseR.node.runAction(move);
                 this.chgAnimation(MouseR,'mouse_action8');
@@ -108,12 +110,49 @@ cc.Class({
                     this.MoneyRight.active = false;
                     // var superInfo = cc.find('superInfo');
                     // if(superInfo.audioIO == 0) cc.audioEngine.playMusic(this.getmusic, false, 0.5);
-                    this.showresult(MouseR)
+                    this.ShowResult(MouseR)
                 },this));
                 MouseR.node.runAction(move);
                 this.chgAnimation(MouseR,'mouse_action8');
             break;
         }
+    },
+
+    ShowResult:function(Mouse){
+        var Jerry = this;
+        setTimeout(function(){
+            Mouse.node.x = 0;
+            Mouse.node.y = 0;
+            Mouse.node.active = false;
+            if(Mouse.node.x < 0){
+                Jerry.LoadDBA('mouse_action6')
+                Jerry.ResultPeriod.string = '期數 '+Global.sn
+            }else{
+                Jerry.LoadDBA('mouse_action7')
+                Jerry.ResultPeriod.string = '期數 '+Global.sn
+                Jerry.ResultPeriod.node.y = -53;
+            }
+            //ResultLRSD
+            Jerry.ResultLRSDImg.active = true
+            Jerry.ResultLRSDImg.setSiblingIndex(50)
+            cc.loader.loadRes("Number_SD/"+Global.ResultLRSD[Global.FinallyActType-1], function (err, res) {
+                Jerry.ResultLRSDImg.node.getComponent(cc.Sprite).spriteFrame  = res
+            })
+            Jerry.ResultPeriod.node.active = true
+            // Jerry.ResultPeriod.setSiblingIndex(51);
+        },2000)
+    },
+
+    LoadDBA:function(AnimName){
+        var DBA = this.ResuleDBA.getComponent(dragonBones.ArmatureDisplay);
+        cc.loader.loadRes('Mouse/action_ske', dragonBones.DragonBonesAsset, (err, res) => {
+            cc.loader.loadRes('Mouse/action_tex', dragonBones.DragonBonesAsset, (err, res2) => {
+                DBA.dragonAsset = res
+                DBA.dragonAtlasAsset = res2
+                DBA.armatureName = AnimName
+                DBA.playAnimation(DBA.armatureName)
+            })
+        })
     },
 
     onLoad () {
@@ -142,8 +181,6 @@ cc.Class({
             var dY = this.recordY - other.node.y;
             var absX = Math.abs(Math.round(dX));
             var absY = Math.abs(Math.round(dY));
-            cc.log('1:'+other.node.x+','+other.node.y)
-            cc.log('2:'+this.recordX+','+this.recordY)
             var Mouse = this.getComponent(dragonBones.ArmatureDisplay)
             if(absX != 0){
                 if(absX > 30 && absX < 70){
