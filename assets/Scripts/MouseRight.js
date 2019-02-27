@@ -137,11 +137,13 @@ cc.Class({
     },
 
     onCollisionEnter: function (other, self) {
-        var dX = this.recordX - other.node.x;
-        var dY = this.recordY - other.node.y;
-        var absX = Math.abs(dX);
-        var absY = Math.abs(dY);
         if(Global.LeftRight == 2){
+            var dX = this.recordX - other.node.x;
+            var dY = this.recordY - other.node.y;
+            var absX = Math.abs(Math.round(dX));
+            var absY = Math.abs(Math.round(dY));
+            cc.log('1:'+other.node.x+','+other.node.y)
+            cc.log('2:'+this.recordX+','+this.recordY)
             var Mouse = this.getComponent(dragonBones.ArmatureDisplay)
             if(absX != 0){
                 if(absX > 30 && absX < 70){

@@ -143,6 +143,7 @@ cc.Class({
             var dY = this.recordY - other.node.y;
             var absX = Math.abs(dX);
             var absY = Math.abs(dY);
+            cc.log(dX+','+dY)
             var Mouse = this.getComponent(dragonBones.ArmatureDisplay)
             if(absX != 0){
                 if(absX > 30 && absX < 70){

@@ -3,13 +3,13 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
-        
+        ColliderDL: cc.Node,
+        ColliderDR: cc.Node,
     },
 
     setSecondSchedule:function(){
-        this.callback = function() {
+        this.callback2 = function() {
             if(Global.SecondActFlag){
-                cc.log('in second control wood')
                 switch (Global.FinallyActType){
                     case 1:
                     case 2:
@@ -17,12 +17,16 @@ cc.Class({
                     break
                     case 3:
                     case 4:
+                        this.node.children[0].active = true
+                        this.ColliderDL.active = true
+                        this.ColliderDR.active = true
                         this.controlwoodmaskD()
                     break
                 }
+                this.unschedule(this.callback2)
             }
         }
-        this.schedule(this.callback,0.5)
+        this.schedule(this.callback2,0.5)
     },
 
     controlmask:function(){
@@ -42,7 +46,7 @@ cc.Class({
     },
 
     controlwoodmaskD:function(){
-        var wh =  this.stair_d._parent.height
+        var wh =  this.node.children[0].height
         var countsq = 0;
         for(var i=wh;i>=0;i--){
             this.controlwoodtimeoutD(i,countsq)
@@ -51,15 +55,15 @@ cc.Class({
     },
 
     controlwoodtimeoutD:function(WoodHeight,delayT){
-        var xdx = this;
+        var Jerry = this;
         setTimeout(function(){
-            xdx.stair_d._parent.height = WoodHeight
+            Jerry.node.children[0].height = WoodHeight
         },50+delayT*30)
     },
 
 
     controlwoodmaskS:function(){
-        var wh =  this.stair_d._parent.height
+        var wh =  this.node.children[0].height
         var countsq = 0;
         for(var i=wh;i>=0;i--){
             this.controlwoodtimeoutS(i,countsq)
@@ -68,13 +72,16 @@ cc.Class({
     },
 
     controlwoodtimeoutS:function(WoodHeight,delayT){
-        var xdx = this;
+        var Jerry = this;
         setTimeout(function(){
-            xdx.stair_s._parent.height = WoodHeight
+            Jerry.node.children[1].height = WoodHeight
         },50+delayT*30)
     },
 
-    // onLoad () {},
+    onLoad () {
+        this.ColliderDL.active = false
+        this.ColliderDR.active = false
+    },
 
     start () {
         this.callback = function(){
