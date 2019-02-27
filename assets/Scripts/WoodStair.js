@@ -9,6 +9,7 @@ cc.Class({
     setSecondSchedule:function(){
         this.callback = function() {
             if(Global.SecondActFlag){
+                cc.log('in second control wood')
                 switch (Global.FinallyActType){
                     case 1:
                     case 2:
@@ -21,6 +22,7 @@ cc.Class({
                 }
             }
         }
+        this.schedule(this.callback,0.5)
     },
 
     controlmask:function(){

@@ -11,8 +11,11 @@ cc.Class({
     start () {
         setTimeout(function(){
             Global.LeftRight = 2;
-            cc.log(Global.LeftRight)
         },5000)
+
+        setTimeout(function(){
+            Global.SingleDouble = 3;
+        },10000)
     },
 
     // update (dt) {},
