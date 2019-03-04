@@ -10,7 +10,7 @@ cc.Class({
 
     start () {
         setTimeout(function(){
-            Global.LeftRight = 1;
+            Global.LeftRight = 2;
         },5000)
 
         setTimeout(function(){

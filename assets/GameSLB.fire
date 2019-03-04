@@ -44,9 +44,9 @@
     },
     "_scale": {
       "__type__": "cc.Vec3",
-      "x": 0.3120826372254029,
-      "y": 0.3120826372254029,
-      "z": 0.3120826372254029
+      "x": 0.4134791666666667,
+      "y": 0.4134791666666667,
+      "z": 0.4134791666666667
     },
     "_quat": {
       "__type__": "cc.Quat",
@@ -4708,10 +4708,10 @@
     "_animationName": "newAnimation",
     "playTimes": 0,
     "_N$dragonAsset": {
-      "__uuid__": "6be9079b-bbaa-4cfb-b8de-1cac51c9bc06"
+      "__uuid__": "c3116429-e835-4a1c-b2c8-c87b1babb544"
     },
     "_N$dragonAtlasAsset": {
-      "__uuid__": "43e17b6c-5143-4240-9d56-590c9f8200af"
+      "__uuid__": "3803a358-82bc-4f24-a4ae-a84b0f5428e9"
     },
     "_N$_defaultArmatureIndex": 4,
     "_N$_animationIndex": 1,
@@ -4876,8 +4876,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 0,
-      "height": 0
+      "width": 159,
+      "height": 152
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -5072,10 +5072,10 @@
     "_animationName": "newAnimation",
     "playTimes": 0,
     "_N$dragonAsset": {
-      "__uuid__": "6be9079b-bbaa-4cfb-b8de-1cac51c9bc06"
+      "__uuid__": "c3116429-e835-4a1c-b2c8-c87b1babb544"
     },
     "_N$dragonAtlasAsset": {
-      "__uuid__": "43e17b6c-5143-4240-9d56-590c9f8200af"
+      "__uuid__": "3803a358-82bc-4f24-a4ae-a84b0f5428e9"
     },
     "_N$_defaultArmatureIndex": 4,
     "_N$_animationIndex": 1,
@@ -5120,6 +5120,9 @@
     },
     "ResultPeriod": {
       "__id__": 114
+    },
+    "ResultLRSDImg": {
+      "__id__": 116
     },
     "ResuleDBA": {
       "__id__": 118

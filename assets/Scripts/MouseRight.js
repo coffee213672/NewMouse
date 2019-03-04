@@ -6,6 +6,7 @@ cc.Class({
         MoneyLeft: cc.Node,
         MoneyRight: cc.Node,
         ResultPeriod: cc.Label,
+        ResultLRSDImg: cc.Node,
         ResuleDBA: cc.Node,
     },
 
@@ -121,38 +122,70 @@ cc.Class({
     ShowResult:function(Mouse){
         var Jerry = this;
         setTimeout(function(){
-            Mouse.node.x = 0;
-            Mouse.node.y = 0;
             Mouse.node.active = false;
             if(Mouse.node.x < 0){
-                Jerry.LoadDBA('mouse_action6')
-                Jerry.ResultPeriod.string = '期數 '+Global.sn
+                Jerry.getDBData(0)
             }else{
-                Jerry.LoadDBA('mouse_action7')
-                Jerry.ResultPeriod.string = '期數 '+Global.sn
+                Jerry.getDBData(1)         
                 Jerry.ResultPeriod.node.y = -53;
             }
             //ResultLRSD
             Jerry.ResultLRSDImg.active = true
             Jerry.ResultLRSDImg.setSiblingIndex(50)
-            cc.loader.loadRes("Number_SD/"+Global.ResultLRSD[Global.FinallyActType-1], function (err, res) {
-                Jerry.ResultLRSDImg.node.getComponent(cc.Sprite).spriteFrame  = res
-            })
-            Jerry.ResultPeriod.node.active = true
             // Jerry.ResultPeriod.setSiblingIndex(51);
         },2000)
     },
 
-    LoadDBA:function(AnimName){
+    getDBData:function(AryLoc){
+        this.ResuleDBA.addComponent(dragonBones.ArmatureDisplay)
         var DBA = this.ResuleDBA.getComponent(dragonBones.ArmatureDisplay);
-        cc.loader.loadRes('Mouse/action_ske', dragonBones.DragonBonesAsset, (err, res) => {
-            cc.loader.loadRes('Mouse/action_tex', dragonBones.DragonBonesAsset, (err, res2) => {
+        var LRSDloc = Global.FinallyActType-1
+        var Jerry = this
+        cc.loader.loadRes(Global.ResultMouseDB[AryLoc][0], dragonBones.DragonBonesAsset, (err, res) => {
+            cc.loader.loadRes(Global.ResultMouseDB[AryLoc][1], dragonBones.DragonBonesAtlasAsset, (err, res2) => {
                 DBA.dragonAsset = res
                 DBA.dragonAtlasAsset = res2
-                DBA.armatureName = AnimName
+                DBA.armatureName = Global.ResultMouseDB[AryLoc][2]
                 DBA.playAnimation(DBA.armatureName)
+                cc.loader.loadRes("Number_SD/"+Global.ResultLRSD[LRSDloc], cc.SpriteFrame, function (err, res) {
+                    Jerry.ResultLRSDImg.getComponent(cc.Sprite).spriteFrame = res
+                    Jerry.ResultPeriod.string = '期數 '+Global.sn
+                    Jerry.ResultLRSDImg.x = Global.ResultPeriodData[1][0]
+                    Jerry.ResultLRSDImg.y = Global.ResultPeriodData[1][1]
+                    Jerry.ResultLRSDImg.scaleX = Global.ResultPeriodData[1][2]
+                    Jerry.ResultLRSDImg.scaleY = Global.ResultPeriodData[1][3]
+                    Jerry.ResultLRSDImg.width = Global.ResultPeriodData[1][4]
+                    Jerry.ResultLRSDImg.height = Global.ResultPeriodData[1][5]
+                    Jerry.ResultPeriod.node.active = true
+                })
             })
         })
+    },
+
+    MouseCollision:function(other){
+        var oX = Math.round(other.node.x)
+        var oY = Math.round(other.node.y)
+        var dX = this.recordX - oX
+        var dY = this.recordY - oY
+        var absX = Math.abs(dX);
+        var absY = Math.abs(dY);
+        var Mouse = this.getComponent(dragonBones.ArmatureDisplay)
+        if(absX != 0){
+            if(absX > 30 && absX < 70){ 
+                if(dX > 0) this.chgAnimation(Mouse,'mouse_action1')
+                else this.chgAnimation(Mouse,'mouse_action1','right')
+            }else if(absX > 300){
+                this.chgAnimation(Mouse,'mouse_action8')
+            }
+        }else{
+            if(absY < 170){
+                if(other.node.x > 0) this.chgAnimation(Mouse,'mouse_action9')
+                else this.chgAnimation(Mouse,'mouse_action9','right')
+            }else{
+                this.chgAnimation(Mouse,'mouse_action3','right')
+            }
+        }
+        return [oX,oY]
     },
 
     onLoad () {
@@ -177,29 +210,9 @@ cc.Class({
 
     onCollisionEnter: function (other, self) {
         if(Global.LeftRight == 2){
-            var dX = this.recordX - other.node.x;
-            var dY = this.recordY - other.node.y;
-            var absX = Math.abs(Math.round(dX));
-            var absY = Math.abs(Math.round(dY));
-            var Mouse = this.getComponent(dragonBones.ArmatureDisplay)
-            if(absX != 0){
-                if(absX > 30 && absX < 70){
-                    if(dX > 0) this.chgAnimation(Mouse,'mouse_action1');
-                    else this.chgAnimation(Mouse,'mouse_action1','right');
-                }else if(absX > 300){
-                    this.chgAnimation(Mouse,'mouse_action8');
-                }
-            }else{
-                if(absY < 170){
-                    if(other.node.x > 0) this.chgAnimation(Mouse,'mouse_action9');
-                    else this.chgAnimation(Mouse,'mouse_action9','right');
-                }else{
-                    this.chgAnimation(Mouse,'mouse_action3','right');
-                }
-            }
-
-            this.recordX = other.node.x;
-            this.recordY = other.node.y;
+            var NewRXY = this.MouseCollision(other)
+            this.recordX = NewRXY[0]
+            this.recordY = NewRXY[1]
         }
     },
 
