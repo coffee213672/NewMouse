@@ -8,6 +8,7 @@ cc.Class({
         ResultPeriod: cc.Label,
         ResultLRSDImg: cc.Node,
         ResuleDBA: cc.Node,
+        MouseItem: cc.Node,
     },
 
     setMouseValue:function(act,tn,direction){
@@ -161,6 +162,7 @@ cc.Class({
                 })
             })
         })
+        Global.OverFlag = true
     },
 
     MouseCollision:function(other){
@@ -191,7 +193,7 @@ cc.Class({
 
     onLoad () {
         cc.director.getCollisionManager().enabled = true
-        cc.director.getCollisionManager().enabledDebugDraw = true
+        cc.director.getCollisionManager().enabledDebugDraw = false
     },
 
     start () {

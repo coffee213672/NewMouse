@@ -81,6 +81,10 @@ cc.Class({
     onLoad () {
         this.ColliderDL.active = false
         this.ColliderDR.active = false
+
+        Global.FirstActFlag = false
+        Global.SecondActFlag = false
+        Global.FinallyActType = false
     },
 
     start () {
