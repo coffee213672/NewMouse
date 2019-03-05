@@ -26,7 +26,7 @@ cc.Class({
                 this.unschedule(this.callback2)
             }
         }
-        this.schedule(this.callback2,0.5)
+        this.schedule(this.callback2,0.1)
     },
 
     controlmask:function(){
@@ -95,7 +95,7 @@ cc.Class({
                 this.unschedule(this.callback)
             }
         }
-        this.schedule(this.callback,1)
+        this.schedule(this.callback,0.1)
     },
 
     // update (dt) {},

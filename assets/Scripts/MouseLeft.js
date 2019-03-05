@@ -134,29 +134,12 @@ cc.Class({
     },
 
     MouseCollision:function(other){
-        var oX = Math.round(other.node.x)
-        var oY = Math.round(other.node.y)
-        var dX = this.recordX - oX
-        var dY = this.recordY - oY
-        var absX = Math.abs(dX);
-        var absY = Math.abs(dY);
+        var CollionData = MF.MouseCollisionValue(other,this.recordX,this.recordY)
         var Mouse = this.getComponent(dragonBones.ArmatureDisplay)
-        if(absX != 0){
-            if(absX > 30 && absX < 70){
-                if(dX > 0) this.chgAnimation(Mouse,'mouse_action1')
-                else this.chgAnimation(Mouse,'mouse_action1','right')
-            }else if(absX > 300){
-                this.chgAnimation(Mouse,'mouse_action8')
-            }
-        }else{
-            if(absY < 170){
-                if(other.node.x > 0) this.chgAnimation(Mouse,'mouse_action9')
-                else this.chgAnimation(Mouse,'mouse_action9','right')
-            }else{
-                this.chgAnimation(Mouse,'mouse_action3','right')
-            }
-        }
-        return [oX,oY]
+        if(CollionData == undefined) return
+        if(CollionData.length > 3)this.chgAnimation(Mouse,CollionData[2],CollionData[3])
+        else this.chgAnimation(Mouse,CollionData[2])
+        return [CollionData[0],CollionData[1]]
     },
 
     onLoad () {
@@ -182,6 +165,7 @@ cc.Class({
     onCollisionEnter: function (other, self) {
         if(Global.LeftRight == 1){
             var NewRXY = this.MouseCollision(other)
+            if(NewRXY==undefined) return
             this.recordX = NewRXY[0]
             this.recordY = NewRXY[1]
         }

@@ -34,3 +34,27 @@ module.exports.GetFinallyActType = function(LR,SD){
     else if(LR == 2 && SD == 4) FAT = 4
     return FAT
 }
+
+module.exports.MouseCollisionValue = function(other,rX,rY){
+    var noX = Math.round(other.node.x)
+    var noY = Math.round(other.node.y)
+    var dX = rX - noX
+    var dY = rY - noY
+    var absX = Math.abs(dX);
+    var absY = Math.abs(dY);
+    if(absX != 0){
+        if(absX >= 20 && absX < 70){ 
+            if(dX > 0) return [noX,noY,'mouse_action1']
+            else return [noX,noY,'mouse_action1','right']
+        }else if(absX > 300){
+            return [noX,noY,'mouse_action8']
+        }
+    }else{
+        if(absY < 170){
+            if(other.node.x > 0) return [noX,noY,'mouse_action9']
+            else return [noX,noY,'mouse_action9','right']
+        }else{
+            return [noX,noY,'mouse_action3','right']
+        }
+    }
+}
