@@ -7,7 +7,6 @@ cc.Class({
     },
 
     gameover:function(){
-        cc.log('come in')
         this.timer = 0
         cc.director.loadScene('GameSLB');
     },
@@ -17,16 +16,24 @@ cc.Class({
         this.timer = 0
         Global.LeftRight = 0
         Global.SingleDouble = 0
+        cc.sys.localStorage.setItem('pbl',0)
+        cc.sys.localStorage.setItem('pbr',0)
     },
 
     start () {
         setTimeout(function(){
-            Global.LeftRight = Math.floor(Math.random()*2)+1
+            Global.LeftRight = 1//Math.floor(Math.random()*2)+1
         },5000)
 
         setTimeout(function(){
-            Global.SingleDouble = Math.floor(Math.random()*2)+3
+            Global.SingleDouble = 4//Math.floor(Math.random()*2)+3
         },10000)
+
+        this.schedule(function(){
+            var rand = Math.floor(Math.random()*100)
+            cc.sys.localStorage.setItem('pbl',rand)
+            cc.sys.localStorage.setItem('pbr',100-rand)
+        },5)
     },
 
     update (dt) {

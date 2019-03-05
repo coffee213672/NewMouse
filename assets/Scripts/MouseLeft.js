@@ -1,4 +1,5 @@
 var Global = require('variable')
+var MF = require('MouseFunc')
 cc.Class({
     extends: cc.Component,
 
@@ -9,51 +10,14 @@ cc.Class({
         ResultLRSDImg: cc.Node,
         ResuleDBA: cc.Node,
         MouseItem: cc.Node,
+        EndBlack: cc.Node
     },
 
     setMouseValue:function(act,tn,direction){
-        switch(act){
-            case 'mouse_action1':
-                if(direction == 'right'){
-                    tn.node.scaleX = -0.425;
-                    tn.node.scaleY = 0.425;
-                }else{
-                    tn.node.scaleX = 0.425;
-                    tn.node.scaleY = 0.425;
-                }
-            break;
-            case 'mouse_action2':
-                if(direction == 'right'){
-                    tn.node.scaleX = -0.4;
-                    tn.node.scaleY = 0.4;
-                }else{
-                    tn.node.scaleX = 0.4;
-                    tn.node.scaleY = 0.4;
-                }
-            break;
-            case 'mouse_action3':
-                tn.node.scaleX = 0.5;
-                tn.node.scaleY = 0.5;
-                tn.node.y = tn.node.y - 40
-            break;
-            case 'mouse_action8':
-                tn.node.scaleX = 0.3;
-                tn.node.scaleY = -0.3;
-            break;
-            case 'mouse_action5':
-                tn.node.scaleX = 1;
-                tn.node.scaleY = 1;
-            break;
-            case 'mouse_action9':
-                if(direction == 'right'){
-                    tn.node.scaleX = -0.4;
-                    tn.node.scaleY = 0.4;
-                }else{
-                    tn.node.scaleX = 0.4;
-                    tn.node.scaleY = 0.4;
-                }
-            break;
-        }
+        var ValueAry = MF.GetMouseSetValue(act,direction)
+        tn.node.scaleX = ValueAry[0]
+        tn.node.scaleY = ValueAry[1]
+        if(act == 'mouse_action3') tn.node.y = tn.node.y - 40
     },
 
     chgAnimation:function(mouse,anim,gowhere){
@@ -67,10 +31,7 @@ cc.Class({
         this.callback = function(){
             if(Global.LeftRight > 0){
                 if(Global.SingleDouble>2){
-                    if(Global.LeftRight == 1 && Global.SingleDouble == 3)  Global.FinallyActType = 1
-                    else if(Global.LeftRight == 2 && Global.SingleDouble == 3) Global.FinallyActType = 2
-                    else if(Global.LeftRight == 1 && Global.SingleDouble == 4) Global.FinallyActType = 3
-                    else if(Global.LeftRight == 2 && Global.SingleDouble == 4) Global.FinallyActType = 4
+                    Global.FinallyActType = MF.GetFinallyActType(Global.LeftRight,Global.SingleDouble)
                     this.goAction(Global.FinallyActType)
                     this.unschedule(this.callback)
                 }
@@ -81,14 +42,18 @@ cc.Class({
     
     goActionZero:function(){
         cc.sys.localStorage.setItem('chgflag',false)
-        var MouseL = this.getComponent(dragonBones.ArmatureDisplay);
+        var MouseL = this.getComponent(dragonBones.ArmatureDisplay)
+        var Jerry = this
         Global.FirstActFlag = true
         if(Global.LeftRight == 1){
+            cc.loader.loadRes("CircleOrange", cc.SpriteFrame, function (err, res) {
+                Jerry.MouseItem.children[0].getComponent(cc.Sprite).spriteFrame = res
+            })
             this.chgAnimation(MouseL,'mouse_action2','right');
             MouseL.node.runAction(cc.sequence(cc.moveBy(0.8,80,-5),cc.callFunc(function(){this.chgAnimation(MouseL,'mouse_action1','right');},this)));
-
         }else{
             var move =  cc.sequence(cc.moveBy(0.8,-200,0),cc.callFunc(function(){MouseL.node.active = false},this))
+            this.MouseItem.children[0].active = false
             MouseL.node.runAction(move);
             this.chgAnimation(MouseL,'mouse_action2');
         }
@@ -123,14 +88,18 @@ cc.Class({
 
     ShowResult:function(Mouse){
         var Jerry = this;
+        if(Mouse.node.x < 0){
+            Jerry.getDBData(0)
+        }else{
+            Jerry.getDBData(1)         
+        }
         setTimeout(function(){
             Mouse.node.active = false;
-            if(Mouse.node.x < 0){
-                Jerry.getDBData(0)
-            }else{
-                Jerry.getDBData(1)         
-                Jerry.ResultPeriod.node.y = -53;
-            }
+            Jerry.EndBlack.active = true
+            Jerry.ResuleDBA.active = true
+            Jerry.ResultLRSDImg.active = true
+            Jerry.ResultPeriod.node.active = true
+            if(Mouse.node.x > 0) Jerry.ResultPeriod.node.y = -53;
             //ResultLRSD
             Jerry.ResultLRSDImg.active = true
             Jerry.ResultLRSDImg.setSiblingIndex(50)
@@ -147,7 +116,7 @@ cc.Class({
                 DBA.dragonAsset = res
                 DBA.dragonAtlasAsset = res2
                 DBA.armatureName = Global.ResultMouseDB[AryLoc][2]
-                DBA.playAnimation(DBA.armatureName)
+                DBA.playAnimation(DBA.armatureName,1)
                 DBA.node.x = -7
                 cc.loader.loadRes("Number_SD/"+Global.ResultLRSD[LRSDloc], cc.SpriteFrame, function (err, res) {
                     Jerry.ResultLRSDImg.getComponent(cc.Sprite).spriteFrame = res
@@ -158,7 +127,6 @@ cc.Class({
                     Jerry.ResultLRSDImg.scaleY = Global.ResultPeriodData[0][3]
                     Jerry.ResultLRSDImg.width = Global.ResultPeriodData[0][4]
                     Jerry.ResultLRSDImg.height = Global.ResultPeriodData[0][5]
-                    Jerry.ResultPeriod.node.active = true
                 })
             })
         })

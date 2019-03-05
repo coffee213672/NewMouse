@@ -1,3 +1,4 @@
+var Global = require('variable')
 cc.Class({
     extends: cc.Component,
 
@@ -20,7 +21,12 @@ cc.Class({
     },
 
     start () {
-
+        this.callback1 = function(){
+            if(Global.LeftRight > 0){
+                this.node.destroy()
+            }
+        }
+        this.schedule(this.callback1,0.5)
     },
 
     // update (dt) {},

@@ -1,6 +1,6 @@
 {
   "ver": "2.3.0",
-  "uuid": "f9949987-e4b8-4e76-b145-f2251595d2c1",
+  "uuid": "8705f402-9f55-4286-ba37-3ffaa9e430aa",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -9,8 +9,8 @@
   "subMetas": {
     "CircleOrange": {
       "ver": "1.0.3",
-      "uuid": "19bb7ca9-b14f-4cce-a9aa-dc3ccf4f4430",
-      "rawTextureUuid": "f9949987-e4b8-4e76-b145-f2251595d2c1",
+      "uuid": "c5f33122-e600-47ca-bf41-eb5d58d99517",
+      "rawTextureUuid": "8705f402-9f55-4286-ba37-3ffaa9e430aa",
       "trimType": "auto",
       "trimThreshold": 1,
       "rotated": false,
