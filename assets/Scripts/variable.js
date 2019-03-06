@@ -6,6 +6,7 @@ module.exports = {
     SecondActFlag:false, // 全開
     FinallyActType:0, // 移動模式
     OverFlag:false,
+    AudioStatus: 0,
     ResultLRSD:['DoubleThree','SingleThree','SingleFour','DoubleFour'],
     ResultMouseDB:[
         ['ResultSingle/action3_ske','ResultSingle/action3_tex','mouse_action6'],

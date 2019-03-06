@@ -22,11 +22,11 @@ cc.Class({
 
     start () {
         setTimeout(function(){
-            Global.LeftRight = 1//Math.floor(Math.random()*2)+1
+            Global.LeftRight = Math.floor(Math.random()*2)+1
         },5000)
 
         setTimeout(function(){
-            Global.SingleDouble = 4//Math.floor(Math.random()*2)+3
+            Global.SingleDouble = Math.floor(Math.random()*2)+3
         },10000)
 
         this.schedule(function(){
@@ -40,4 +40,16 @@ cc.Class({
         if(Global.OverFlag) this.timer += dt
         if(this.timer > 4) this.gameover();
     },
+
+    //正式上web須測試
+    lateUpdate() {
+        if (cc.sys.isBrowser) {
+            let context = cc.sys.__audioSupport.context;
+            if(context != undefined){
+                if (context.state === 'suspended') {
+                    context.resume()
+                }
+            }
+        }
+    }
 });

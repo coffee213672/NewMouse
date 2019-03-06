@@ -10,7 +10,11 @@ cc.Class({
         ResultLRSDImg: cc.Node,
         ResuleDBA: cc.Node,
         MouseItem: cc.Node,
-        EndBlack: cc.Node
+        EndBlack: cc.Node,
+        GetEffectSound:{
+            type:cc.AudioClip,
+            default:null
+        }
     },
 
     setMouseValue:function(act,tn,direction){
@@ -60,47 +64,37 @@ cc.Class({
     },
 
     goAction:function(Mode){
-        var MouseR = this.getComponent(dragonBones.ArmatureDisplay);
+        var MouseR = this.getComponent(dragonBones.ArmatureDisplay)
         Global.SecondActFlag = true
-        switch (Mode){
-            case 2:
-                var move = cc.sequence(cc.moveBy(0.25,0,-79),cc.moveBy(1,-344,0),cc.moveBy(0.25,0,-84),cc.moveBy(1,344,0),cc.moveBy(0.25,0,-84),cc.moveBy(1,-344,0),cc.moveBy(0.8,0,-268),cc.callFunc(function(){
-                    // var superInfo = cc.find('superInfo');
-                    // if(superInfo.audioIO == 0) cc.audioEngine.playMusic(this.getmusic, false, 0.5);
-                    this.MoneyLeft.active = false;
-                    this.ShowResult(MouseR)
-                },this));
-                MouseR.node.runAction(move);
-                this.chgAnimation(MouseR,'mouse_action8');
-            break;
-            case 4:
-                var move = cc.sequence(cc.moveBy(0.25,0,-79),cc.moveBy(1,-344,0),cc.moveBy(0.25,0,-84),cc.moveBy(1,344,0),cc.moveBy(0.25,0,-84),cc.moveBy(1,-344,0),cc.moveBy(0.25,0,-84),cc.moveBy(1,344,0),cc.moveBy(0.5,0,-185),cc.callFunc(function(){
-                    this.MoneyRight.active = false;
-                    // var superInfo = cc.find('superInfo');
-                    // if(superInfo.audioIO == 0) cc.audioEngine.playMusic(this.getmusic, false, 0.5);
-                    this.ShowResult(MouseR)
-                },this));
-                MouseR.node.runAction(move);
-                this.chgAnimation(MouseR,'mouse_action8');
-            break;
-        }
+        var callback = cc.callFunc(function(){
+            if(Global.AudioStatus == 0) cc.audioEngine.playMusic(this.GetEffectSound, false, 0.5)
+            if(Mode == 2) this.MoneyLeft.active = false
+            else this.MoneyRight.active = false
+            this.ShowResult(MouseR)
+        },this)
+        var act = MF.GetGoActionMove(Mode)
+        MouseR.node.runAction(cc.sequence(act,callback))
+        this.chgAnimation(MouseR,'mouse_action8')
     },
 
     ShowResult:function(Mouse){
         var Jerry = this;
+        if(Mouse.node.x < 0){
+            Jerry.getDBData(0)
+        }else{
+            Jerry.getDBData(1)         
+        }
         setTimeout(function(){
             Mouse.node.active = false;
             Jerry.EndBlack.active = true
-            if(Mouse.node.x < 0){
-                Jerry.getDBData(0)
-            }else{
-                Jerry.getDBData(1)         
-                Jerry.ResultPeriod.node.y = -53;
-            }
+            Jerry.ResuleDBA.active = true
+            Jerry.ResultLRSDImg.active = true
+            Jerry.ResultPeriod.node.active = true
+            if(Mouse.node.x > 0) Jerry.ResultPeriod.node.y = -53
+            else Jerry.ResuleDBA.x = -8
             //ResultLRSD
             Jerry.ResultLRSDImg.active = true
             Jerry.ResultLRSDImg.setSiblingIndex(50)
-            // Jerry.ResultPeriod.setSiblingIndex(51);
         },2000)
     },
 
@@ -114,17 +108,16 @@ cc.Class({
                 DBA.dragonAsset = res
                 DBA.dragonAtlasAsset = res2
                 DBA.armatureName = Global.ResultMouseDB[AryLoc][2]
-                DBA.playAnimation(DBA.armatureName)
+                DBA.playAnimation(DBA.armatureName,1)
                 cc.loader.loadRes("Number_SD/"+Global.ResultLRSD[LRSDloc], cc.SpriteFrame, function (err, res) {
                     Jerry.ResultLRSDImg.getComponent(cc.Sprite).spriteFrame = res
                     Jerry.ResultPeriod.string = '期數 '+Global.sn
-                    Jerry.ResultLRSDImg.x = Global.ResultPeriodData[1][0]
-                    Jerry.ResultLRSDImg.y = Global.ResultPeriodData[1][1]
-                    Jerry.ResultLRSDImg.scaleX = Global.ResultPeriodData[1][2]
-                    Jerry.ResultLRSDImg.scaleY = Global.ResultPeriodData[1][3]
-                    Jerry.ResultLRSDImg.width = Global.ResultPeriodData[1][4]
-                    Jerry.ResultLRSDImg.height = Global.ResultPeriodData[1][5]
-                    Jerry.ResultPeriod.node.active = true
+                    Jerry.ResultLRSDImg.x = Global.ResultPeriodData[0][0]
+                    Jerry.ResultLRSDImg.y = Global.ResultPeriodData[0][1]
+                    Jerry.ResultLRSDImg.scaleX = Global.ResultPeriodData[0][2]
+                    Jerry.ResultLRSDImg.scaleY = Global.ResultPeriodData[0][3]
+                    Jerry.ResultLRSDImg.width = Global.ResultPeriodData[0][4]
+                    Jerry.ResultLRSDImg.height = Global.ResultPeriodData[0][5]
                 })
             })
         })
@@ -132,8 +125,9 @@ cc.Class({
     },
 
     MouseCollision:function(other){
-        var CollionData = MF.MouseCollisionValue(other.node.x,other.node.y,this.recordX,this.recordY)
+        var CollionData = MF.MouseCollisionValue(other,this.recordX,this.recordY)
         var Mouse = this.getComponent(dragonBones.ArmatureDisplay)
+        if(CollionData == undefined) return
         if(CollionData.length > 3)this.chgAnimation(Mouse,CollionData[2],CollionData[3])
         else this.chgAnimation(Mouse,CollionData[2])
         return [CollionData[0],CollionData[1]]
@@ -145,8 +139,8 @@ cc.Class({
     },
 
     start () {
-        this.recordX = this.node.x;
-        this.recordY = this.node.y;
+        this.recordX = this.node.x
+        this.recordY = this.node.y
 
         //左右計時器
         this.callback1 = function(){
@@ -162,6 +156,7 @@ cc.Class({
     onCollisionEnter: function (other, self) {
         if(Global.LeftRight == 2){
             var NewRXY = this.MouseCollision(other)
+            if(NewRXY==undefined) return
             this.recordX = NewRXY[0]
             this.recordY = NewRXY[1]
         }
