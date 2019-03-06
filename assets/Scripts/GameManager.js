@@ -34,6 +34,14 @@ cc.Class({
             cc.sys.localStorage.setItem('pbl',rand)
             cc.sys.localStorage.setItem('pbr',100-rand)
         },5)
+
+        //檢查期數計時器
+        // this.schedule(function(){
+        //     var GetSn = cc.sys.localStorage.getItem('sn')
+        //     if(GetSn != Global.sn){
+        //         Global.sn = GetSn
+        //     }
+        // },0.5)
     },
 
     update (dt) {
