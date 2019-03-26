@@ -32,7 +32,14 @@ cc.Class({
         cc.sys.localStorage.setItem('pbr',0)
         cc.sys.localStorage.setItem('lr' ,0)
         cc.sys.localStorage.setItem('sd',0)
-    },
+        if(cc.sys.localStorage.getItem('sn') == null) cc.sys.localStorage.setItem('sn','-----------')
+
+        let canvas = cc.Canvas.instance.node.getComponent(cc.Canvas)
+        let ScreenSize = cc.winSize
+        let ScreenProportion = (ScreenSize.height) / ScreenSize.width
+        canvas.node.scaleY = 0.5 * ScreenProportion
+        cc.view.setDesignResolutionSize(ScreenSize.width,(ScreenSize.height),cc.ResolutionPolicy.NO_BORDER)
+     },
 
     start () {
         // setTimeout(function(){
@@ -45,7 +52,6 @@ cc.Class({
 
         this.callback = function(){
             var MLR = cc.sys.localStorage.getItem('lr')
-            cc.log('this is one')
             if(MLR != 0 && MLR != '') {
                 Global.LeftRight = parseInt(MLR)
                 this.setNewSchedule();
@@ -55,19 +61,18 @@ cc.Class({
 
         this.schedule(this.callback,1)
 
-        this.schedule(function(){
-            var rand = Math.floor(Math.random()*100)
-            cc.sys.localStorage.setItem('pbl',rand)
-            cc.sys.localStorage.setItem('pbr',100-rand)
-        },5)
+        // this.schedule(function(){
+        //     var rand = Math.floor(Math.random()*100)
+        //     cc.sys.localStorage.setItem('pbl',rand)
+        //     cc.sys.localStorage.setItem('pbr',100-rand)
+        // },5)
 
         //檢查期數計時器
         this.schedule(function(){
             var GetSn = cc.sys.localStorage.getItem('sn')
-            cc.log('期數檢查計時器')
-            if(GetSn != Global.sn){
-                this.Period.getComponent(cc.Label).string = GetSn
-                this.Period.children[0].getComponent(cc.Label).string = GetSn
+            if(GetSn != Global.sn && GetSn != '-----------'){
+                this.Period.getComponent(cc.Label).string = '第'+GetSn+'期'
+                this.Period.children[0].getComponent(cc.Label).string = '第'+GetSn+'期'
                 Global.sn = GetSn
             }
         },0.5)
