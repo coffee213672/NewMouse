@@ -9,13 +9,18 @@ cc.Class({
     setNewSchedule:function(){
         this.callback1 = function(){
             var MSD = cc.sys.localStorage.getItem('sd')
-            cc.log('this is two')
             if(MSD != 0 && MSD != ''){
                 Global.SingleDouble = parseInt(MSD)
                 this.unschedule(this.callback1)
             }
         }
         this.schedule(this.callback1,0.5)
+    },
+
+    setSn:function(GetSn){
+        this.Period.getComponent(cc.Label).string = '第 '+GetSn+' 期'
+        this.Period.children[0].getComponent(cc.Label).string = '第 '+GetSn+' 期'
+        Global.sn = GetSn
     },
 
     gameover:function(){
@@ -32,7 +37,10 @@ cc.Class({
         cc.sys.localStorage.setItem('pbr',0)
         cc.sys.localStorage.setItem('lr' ,0)
         cc.sys.localStorage.setItem('sd',0)
-        if(cc.sys.localStorage.getItem('sn') == null) cc.sys.localStorage.setItem('sn','-----------')
+
+        var GetSn = cc.sys.localStorage.getItem('sn')
+        if(GetSn == null) cc.sys.localStorage.setItem('sn','0000000')
+        else this.setSn(GetSn)
 
         let canvas = cc.Canvas.instance.node.getComponent(cc.Canvas)
         let ScreenSize = cc.winSize
@@ -70,11 +78,11 @@ cc.Class({
         //檢查期數計時器
         this.schedule(function(){
             var GetSn = cc.sys.localStorage.getItem('sn')
-            if(GetSn != Global.sn && GetSn != '-----------'){
-                this.Period.getComponent(cc.Label).string = '第'+GetSn+'期'
-                this.Period.children[0].getComponent(cc.Label).string = '第'+GetSn+'期'
-                Global.sn = GetSn
+            if((GetSn != Global.sn) || (GetSn != null && Global.sn == 0)){
+                this.setSn(GetSn)
+                this.gameover()
             }
+            
         },0.5)
     },
 
@@ -83,15 +91,15 @@ cc.Class({
         if(this.timer > 4) this.gameover();
     },
 
-    //正式上web須測試
-    lateUpdate() {
-        if (cc.sys.isBrowser) {
-            let context = cc.sys.__audioSupport.context;
-            if(context != undefined){
-                if (context.state === 'suspended') {
-                    context.resume()
-                }
-            }
-        }
-    }
+    // 正式上web須測試
+    // lateUpdate() {
+    //     if (cc.sys.isBrowser) {
+    //         let context = cc.sys.__audioSupport.context;
+    //         if(context != undefined){
+    //             if (context.state === 'suspended') {
+    //                 context.resume()
+    //             }
+    //         }
+    //     }
+    // }
 });

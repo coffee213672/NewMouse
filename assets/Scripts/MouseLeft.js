@@ -8,6 +8,7 @@ cc.Class({
         MoneyRight: cc.Node,
         ResultSingle: cc.Node,
         ResultDouble: cc.Node,
+        ResultTitle: cc.Node,
         // ResultPeriod: cc.Label,
         // ResultLRSDImg: cc.Node,
         // ResuleDBA: cc.Node,
@@ -86,6 +87,7 @@ cc.Class({
         setTimeout(function(){
             Mouse.node.active = false;
             Jerry.EndBlack.active = true
+            Jerry.ResultTitle.active = true
             Jerry.getDBData()
             // Jerry.ResuleDBA.active = true
             // Jerry.ResultLRSDImg.active = true
