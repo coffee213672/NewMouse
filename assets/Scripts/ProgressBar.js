@@ -16,7 +16,7 @@ cc.Class({
                 bar_string.string = countT+'%'
                 setTimeout(addP,22)
             }
-            addP();
+            addP()
         }else{
             function cutP(){
                 countT--
@@ -25,7 +25,7 @@ cc.Class({
                 bar_string.string = countT+'%'
                 setTimeout(cutP,22)
             }
-            cutP();
+            cutP()
         }
     },
 

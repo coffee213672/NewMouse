@@ -21,11 +21,12 @@ cc.Class({
         this.Period.getComponent(cc.Label).string = '第 '+GetSn+' 期'
         this.Period.children[0].getComponent(cc.Label).string = '第 '+GetSn+' 期'
         Global.sn = GetSn
+        Global.OldSn = GetSn
     },
 
     gameover:function(){
         this.timer = 0
-        cc.director.loadScene('GameSLB');
+        cc.director.loadScene('GameSLB')
     },
 
     onLoad () {
@@ -33,14 +34,15 @@ cc.Class({
         this.timer = 0
         Global.LeftRight = 0
         Global.SingleDouble = 0
+        Global.sn = 0
         cc.sys.localStorage.setItem('pbl',0)
         cc.sys.localStorage.setItem('pbr',0)
         cc.sys.localStorage.setItem('lr' ,0)
         cc.sys.localStorage.setItem('sd',0)
 
         var GetSn = cc.sys.localStorage.getItem('sn')
-        if(GetSn == null) cc.sys.localStorage.setItem('sn','0000000')
-        else this.setSn(GetSn)
+        if(GetSn == null || GetSn == '0000000') cc.sys.localStorage.setItem('sn','0000000')
+        // else this.setSn(GetSn)
 
         let canvas = cc.Canvas.instance.node.getComponent(cc.Canvas)
         let ScreenSize = cc.winSize
@@ -78,10 +80,17 @@ cc.Class({
         //檢查期數計時器
         this.schedule(function(){
             var GetSn = cc.sys.localStorage.getItem('sn')
-            if((GetSn != Global.sn) || (GetSn != null && Global.sn == 0)){
-                this.setSn(GetSn)
-                this.gameover()
+            if(GetSn != null){
+                if(Global.OldSn == 0 || (Global.OldSn != 0 && Global.OldSn != GetSn)){
+                    this.setSn(GetSn)
+                }
+            }else{
+                if(Global.sn != 0 && GetSn != Global.sn) this.gameover()
             }
+            // if((GetSn != Global.sn) || (GetSn != null && Global.sn == 0)){
+            //     this.setSn(GetSn)
+            //     this.gameover()
+            // }
             
         },0.5)
     },

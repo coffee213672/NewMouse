@@ -28,10 +28,10 @@ cc.Class({
     },
 
     chgAnimation:function(mouse,anim,gowhere){
-        if(typeof gowhere == undefined) this.setMouseValue(anim,mouse);
-        else this.setMouseValue(anim,mouse,gowhere);
-        mouse.armatureName = anim;
-        mouse.playAnimation(anim);
+        if(gowhere === undefined) this.setMouseValue(anim,mouse)
+        else this.setMouseValue(anim,mouse,gowhere)
+        mouse.armatureName = anim
+        mouse.playAnimation(anim)
     },
 
     setNewSchedule:function(){
@@ -49,21 +49,21 @@ cc.Class({
     
     goActionZero:function(){
         cc.sys.localStorage.setItem('chgflag',false)
-        var MouseR = this.getComponent(dragonBones.ArmatureDisplay);
-        var Jerry = this
+        var MouseR = this.getComponent(dragonBones.ArmatureDisplay)
+        // var Jerry = this
         Global.FirstActFlag = true
         if(Global.LeftRight == 1){
             this.MouseItem.children[1].active = false
             var move =  cc.sequence(cc.moveBy(0.8,200,0),cc.callFunc(function(){MouseR.node.active = false},this))
-            MouseR.node.runAction(move);
-            this.chgAnimation(MouseR,'mouse_action2','right');
+            MouseR.node.runAction(move)
+            this.chgAnimation(MouseR,'mouse_action2','right')
         }else{
             // cc.loader.loadRes("CircleOrange", cc.SpriteFrame, function (err, res) {
             //     Jerry.MouseItem.children[1].getComponent(cc.Sprite).spriteFrame = res
             // })
             this.MouseItem.children[1].children[0].active = true
-            this.chgAnimation(MouseR,'mouse_action2');
-            MouseR.node.runAction(cc.sequence(cc.moveBy(0.8,-80,-5),cc.callFunc(function(){this.chgAnimation(MouseR,'mouse_action1');},this)));
+            this.chgAnimation(MouseR,'mouse_action2')
+            MouseR.node.runAction(cc.sequence(cc.moveBy(0.8,-80,-5),cc.callFunc(function(){this.chgAnimation(MouseR,'mouse_action1');},this)))
         }
     },
 
@@ -82,9 +82,9 @@ cc.Class({
     },
 
     ShowResult:function(Mouse){
-        var Jerry = this;
+        var Jerry = this
         setTimeout(function(){
-            Mouse.node.active = false;
+            Mouse.node.active = false
             Jerry.EndBlack.active = true
             Jerry.ResultTitle.active = true
             Jerry.getDBData()
@@ -100,43 +100,26 @@ cc.Class({
     },
 
     getDBData:function(){
-        switch (Global.FinallyActType){
-            case 1:
-                this.ResultDouble.children[0].active = true
-                this.ResultDouble.children[1].getComponent(cc.Label).string = '期數 '+Global.sn
-                this.ResultDouble.children[1].y = -53
-                this.ResultDouble.children[1].getComponent(cc.Label).node.active= true
-                this.ResultDouble.children[2].active = true
-                this.ResultDouble.children[2].setSiblingIndex(50)
-            break
-            case 2:
-                this.ResultSingle.children[0].active = true
-                this.ResultSingle.children[0].x = -8
-                this.ResultSingle.children[1].getComponent(cc.Label).string = '期數 '+Global.sn
-                this.ResultSingle.children[1].getComponent(cc.Label).node.active= true
-                this.ResultSingle.children[2].active = true
-                this.ResultDouble.children[2].setSiblingIndex(50)
-            break
-            case 3:
-                this.ResultSingle.children[0].active = true
-                this.ResultSingle.children[0].x = -8
-                this.ResultSingle.children[1].getComponent(cc.Label).string = '期數 '+Global.sn
-                this.ResultSingle.children[1].getComponent(cc.Label).node.active= true             
-                this.ResultSingle.children[3].active = true
-                this.ResultDouble.children[3].setSiblingIndex(50)
-            break
-            case 4:
-                this.ResultDouble.children[0].active = true
-                this.ResultDouble.children[1].getComponent(cc.Label).string = '期數 '+Global.sn
-                this.ResultDouble.children[1].getComponent(cc.Label).node.active= true
-                this.ResultDouble.children[1].y = -53
-                this.ResultDouble.children[3].active = true
-                this.ResultDouble.children[3].setSiblingIndex(50)
-            break
+        let GetResultSDValueKey = Global.FinallyActType - 1
+        if(Global.FinallyActType == 1 || Global.FinallyActType == 4){
+            this.ResultDouble.children[Global.ResultSDValue[GetResultSDValueKey][0]].active = true
+            this.ResultDouble.children[Global.ResultSDValue[GetResultSDValueKey][1]].getComponent(cc.Label).string = '期數 '+Global.sn
+            this.ResultDouble.children[Global.ResultSDValue[GetResultSDValueKey][2]].getComponent(cc.Label).node.active = true
+            this.ResultDouble.children[Global.ResultSDValue[GetResultSDValueKey][3]].y = -53
+            this.ResultDouble.children[Global.ResultSDValue[GetResultSDValueKey][4]].active = true
+            this.ResultDouble.children[Global.ResultSDValue[GetResultSDValueKey][5]].setSiblingIndex(50)
+        }else{
+            this.ResultSingle.children[Global.ResultSDValue[GetResultSDValueKey][0]].active = true
+            this.ResultSingle.children[Global.ResultSDValue[GetResultSDValueKey][1]].x = -8
+            this.ResultSingle.children[Global.ResultSDValue[GetResultSDValueKey][2]].getComponent(cc.Label).string = '期數 '+Global.sn
+            this.ResultSingle.children[Global.ResultSDValue[GetResultSDValueKey][3]].getComponent(cc.Label).node.active= true
+            this.ResultSingle.children[Global.ResultSDValue[GetResultSDValueKey][4]].active = true
+            this.ResultSingle.children[Global.ResultSDValue[GetResultSDValueKey][5]].setSiblingIndex(50)
         }
 
+
         // this.ResuleDBA.addComponent(dragonBones.ArmatureDisplay)
-        // var DBA = this.ResuleDBA.getComponent(dragonBones.ArmatureDisplay);
+        // var DBA = this.ResuleDBA.getComponent(dragonBones.ArmatureDisplay)
         // var LRSDloc = Global.FinallyActType-1
         // var Jerry = this
         // cc.loader.loadRes(Global.ResultMouseDB[AryLoc][0], dragonBones.DragonBonesAsset, (err, res) => {
@@ -181,8 +164,8 @@ cc.Class({
         //左右計時器
         this.callback1 = function(){
             if(Global.LeftRight > 0){
-                this.goActionZero();
-                if(Global.LeftRight == 2) this.setNewSchedule(); //啟動單雙計時器 
+                this.goActionZero()
+                if(Global.LeftRight == 2) this.setNewSchedule() //啟動單雙計時器 
                 this.unschedule(this.callback1)
             }
         }
@@ -192,7 +175,7 @@ cc.Class({
     onCollisionEnter: function (other, self) {
         if(Global.LeftRight == 2){
             var NewRXY = this.MouseCollision(other)
-            if(NewRXY==undefined) return
+            if(NewRXY == undefined) return
             this.recordX = NewRXY[0]
             this.recordY = NewRXY[1]
         }
