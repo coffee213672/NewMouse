@@ -17,7 +17,7 @@ cc.Class({
         this.schedule(this.callback1,0.5)
     },
 
-    setSn:function(GetSn){
+    setSn:function(GetSn = '0000000'){
         this.Period.getComponent(cc.Label).string = '第 '+GetSn+' 期'
         this.Period.children[0].getComponent(cc.Label).string = '第 '+GetSn+' 期'
         Global.sn = GetSn
@@ -40,9 +40,7 @@ cc.Class({
         cc.sys.localStorage.setItem('lr' ,0)
         cc.sys.localStorage.setItem('sd',0)
 
-        var GetSn = cc.sys.localStorage.getItem('sn')
-        if(GetSn == null || GetSn == '0000000') cc.sys.localStorage.setItem('sn','0000000')
-        // else this.setSn(GetSn)
+        if(!cc.sys.localStorage.getItem('chgflag')) cc.sys.localStorage.setItem('sn','0000000')
 
         let canvas = cc.Canvas.instance.node.getComponent(cc.Canvas)
         let ScreenSize = cc.winSize
@@ -52,13 +50,16 @@ cc.Class({
      },
 
     start () {
-        // setTimeout(function(){
-        //     Global.LeftRight = Math.floor(Math.random()*2)+1
-        // },5000)
+        /*
+            測試老鼠動作 LeftRight:左或右老鼠, SingleDouble:單或雙梯子
+            setTimeout(function(){
+                Global.LeftRight = Math.floor(Math.random()*2)+1
+            },5000)
 
-        // setTimeout(function(){
-        //     Global.SingleDouble = Math.floor(Math.random()*2)+3
-        // },10000)
+            setTimeout(function(){
+                Global.SingleDouble = Math.floor(Math.random()*2)+3
+            },10000)
+        */
 
         this.callback = function(){
             var MLR = cc.sys.localStorage.getItem('lr')
@@ -70,28 +71,28 @@ cc.Class({
         }
 
         this.schedule(this.callback,1)
-
-        // this.schedule(function(){
-        //     var rand = Math.floor(Math.random()*100)
-        //     cc.sys.localStorage.setItem('pbl',rand)
-        //     cc.sys.localStorage.setItem('pbr',100-rand)
-        // },5)
+        /*
+            熱度條亂數生成計時器(5秒一次)
+            this.schedule(function(){
+                var rand = Math.floor(Math.random()*100)
+                cc.sys.localStorage.setItem('pbl',rand)
+                cc.sys.localStorage.setItem('pbr',100-rand)
+            },5)
+        */
 
         //檢查期數計時器
         this.schedule(function(){
             var GetSn = cc.sys.localStorage.getItem('sn')
-            if(GetSn != null){
-                if(Global.OldSn == 0 || (Global.OldSn != 0 && Global.OldSn != GetSn)){
-                    this.setSn(GetSn)
-                }
+            if(Global.OldSn == 0){
+                if(Global.OldSn != GetSn) this.setSn(GetSn)
             }else{
                 if(Global.sn != 0 && GetSn != Global.sn) this.gameover()
+                if(Global.sn == 0)  this.setSn(GetSn)
+                if(GetSn == null){
+                    cc.sys.localStorage.setItem('sn','0000000')
+                    this.setSn()
+                }
             }
-            // if((GetSn != Global.sn) || (GetSn != null && Global.sn == 0)){
-            //     this.setSn(GetSn)
-            //     this.gameover()
-            // }
-            
         },0.5)
     },
 
@@ -100,7 +101,7 @@ cc.Class({
         if(this.timer > 4) this.gameover();
     },
 
-    // 正式上web須測試
+    // 若音訊能正常播放無須以下(Chrome瀏覽器機制，不會主動播放音訊，需要有對頁面進行任何動作才會。以下是直接改變狀態)
     // lateUpdate() {
     //     if (cc.sys.isBrowser) {
     //         let context = cc.sys.__audioSupport.context;
